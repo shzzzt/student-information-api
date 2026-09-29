@@ -25,3 +25,9 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Local test artifacts and laboratory reference files
+/student-frontend/playwright-report/
+/student-frontend/test-results/
+/AI_Assisted_Frontend_Framework_Integration_Laboratory_Activity.pdf
+/AI_Assisted_REST_API_Laboratory_Activity.pdf

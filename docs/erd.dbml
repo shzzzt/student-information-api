@@ -1,0 +1,140 @@
+Project student_information_api {
+  database_type: 'PostgreSQL'
+}
+
+Table users {
+  id bigint [pk, increment]
+  first_name varchar(100)
+  last_name varchar(100)
+  email varchar [unique]
+  password varchar
+  role varchar
+  status varchar
+  email_verified_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table programs {
+  id bigint [pk, increment]
+  code varchar(20) [unique]
+  name varchar(150)
+  department varchar(150)
+  degree_level varchar
+  total_credits smallint
+  status varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table academic_terms {
+  id bigint [pk, increment]
+  code varchar(20) [unique]
+  name varchar(100)
+  term_type varchar
+  academic_year smallint
+  start_date date
+  end_date date
+  registration_start date
+  registration_end date
+  status varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table courses {
+  id bigint [pk, increment]
+  course_code varchar(20) [unique]
+  title varchar(200)
+  description text
+  credits tinyint
+  lecture_hours smallint
+  lab_hours smallint
+  program_id bigint
+  status varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table students {
+  id bigint [pk, increment]
+  user_id bigint [unique]
+  student_number varchar(30) [unique]
+  first_name varchar(100)
+  middle_name varchar(100)
+  last_name varchar(100)
+  program_id bigint
+  year_level tinyint
+  date_of_birth date
+  gender varchar
+  phone varchar(30)
+  address text
+  admission_date date
+  expected_graduation_date date
+  status varchar
+  cumulative_gpa decimal(3,2)
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table course_offerings {
+  id bigint [pk, increment]
+  course_id bigint
+  academic_term_id bigint
+  instructor_id bigint
+  section varchar(10)
+  room varchar(50)
+  delivery_mode varchar
+  capacity smallint
+  enrolled_count smallint
+  status varchar
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (course_id, academic_term_id, section) [unique]
+  }
+}
+
+Table enrollments {
+  id bigint [pk, increment]
+  student_id bigint
+  course_offering_id bigint
+  enrolled_on date
+  dropped_on date
+  status varchar
+  grade_mode varchar
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (student_id, course_offering_id) [unique]
+  }
+}
+
+Table grades {
+  id bigint [pk, increment]
+  enrollment_id bigint [unique]
+  letter_grade varchar(5)
+  numeric_grade decimal(5,2)
+  grade_points decimal(3,2)
+  status varchar
+  graded_by bigint
+  graded_at timestamp
+  remarks text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Ref: students.user_id - users.id
+Ref: students.program_id > programs.id
+Ref: courses.program_id > programs.id
+Ref: course_offerings.course_id > courses.id
+Ref: course_offerings.academic_term_id > academic_terms.id
+Ref: course_offerings.instructor_id > users.id
+Ref: enrollments.student_id > students.id
+Ref: enrollments.course_offering_id > course_offerings.id
+Ref: grades.enrollment_id - enrollments.id
+Ref: grades.graded_by > users.id
